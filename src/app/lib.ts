@@ -1,6 +1,6 @@
 import type { Client, Order, Product } from "./types";
 
-const API = "http://localhost:3001/api";
+const API = "https://cristal-pg-production.up.railway.app";
 
 function getToken() {
   if (typeof window === "undefined") return null;
