@@ -125,7 +125,27 @@ export function formatDate(value: string) {
 
 export function formatDateInput(value?: string) {
   if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toISOString().split("T")[0];
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${month}-${day}`;
+}
+
+export function getOrderItems(order: Order) {
+  return order.items
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+export function findClient(clients: Client[], order: Order) {
+  return clients.find(
+    (client) => client.id === order.client_id || client.name === order.client_name
+  );
+}
+export function getCategories(products: Product[]) {
+  return Array.from(
+    new Set(products.map((product) => product.category_name).filter(Boolean))
+  ).sort();
 }
