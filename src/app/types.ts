@@ -75,19 +75,19 @@ export type Lead = {
 };
 
 export type Complaint = {
-  order_number?: string;
-  order_number?: string;
   id: number;
   order_id?: number;
   client_id?: number;
-  client_name?: string;
   product_id?: number;
+  order_number?: string;
+  client_name?: string;
+  client_phone?: string;
   product_name?: string;
-  title?: string;
-  reason: string;
-  description: string;
-  status: "open" | "investigating" | "resolved";
-  created_at: string;
+  reason?: string;
+  description?: string;
+  status?: string;
+  created_at?: string;
+  order_total?: number;
 };
 
 export type User = {
