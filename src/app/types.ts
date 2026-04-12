@@ -1,116 +1,103 @@
-export type Product = {
-  id: number;
-  name: string;
-  sku?: string;
-  category_id?: number;
-  brand_id?: number;
-  category_name: string;
-  brand_name: string;
-  price: number;
-  unit: string;
-  stock?: number;
-  discontinued?: number;
-  description?: string;
-  technical_info?: string;
-};
+import type { Client, Order, Product } from "./types";
 
-export type Category = {
-  id: number;
-  name: string;
-};
+const API = "https://cristal-pg-production.up.railway.app/api";
 
-export type Client = {
-  id: number;
-  name: string;
-  phone: string;
-  location?: string;
-  address: string;
-  notes?: string;
-  email?: string;
-  lat?: number;
-  lng?: number;
-  created_at: string;
-};
+function getToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("token");
+}
 
-export type OrderItem = {
-  product_id: number;
-  product_name: string;
-  quantity: number;
-  unit_price: number;
-};
+export async function fetchJson<T>(path: string): Promise<T> {
+  const token = getToken();
+  const headers: Record<string, string> = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
-export type Order = {
-  id: number;
-  order_number?: string;
-  client_id: number;
-  client_name: string;
-  client_phone?: string;
-  items: string;
-  total: number;
-  status: "pending" | "confirmed" | "delivered" | "cancelled";
-  payment: string;
-  payment_status?: "pending" | "paid";
-  payment_method?: string;
-  delivery_address?: string;
-  delivery_fee?: number;
-  scheduled_date?: string;
-  scheduled_time?: string;
-  notes?: string;
-  created_at: string;
-  delivered_date?: string;
-};
+  const response = await fetch(`${API}${path}`, {
+    cache: "no-store",
+    headers,
+  });
 
-export type OrderDetail = Order & {
-  client: Client;
-  items: OrderItem[];
-};
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    if (typeof window !== "undefined") window.location.reload();
+    throw new Error("Sesión expirada");
+  }
 
-export type Lead = {
-  id: number;
-  name: string;
-  phone: string;
-  address: string;
-  created_at: string;
-  status: "nuevo" | "convertido";
-};
+  if (!response.ok) {
+    throw new Error(`Error cargando ${path}`);
+  }
+  return response.json();
+}
 
-export type Complaint = {
-  id: number;
-  order_id?: number;
-  client_id?: number;
-  product_id?: number;
-  order_number?: string;
-  client_name?: string;
-  client_phone?: string;
-  product_name?: string;
-  reason?: string;
-  description?: string;
-  status?: string;
-  created_at?: string;
-  order_total?: number;
-};
+export async function postJson<T>(path: string, body: unknown): Promise<T> {
+  const token = getToken();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
-export type User = {
-  id: number;
-  username: string;
-  role: "admin" | "operator";
-};
+  const response = await fetch(`${API}${path}`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
 
-export type DashboardSummary = {
-  totalClients: number;
-  totalProducts: number;
-  ordersToday: number;
-  ordersMonth: number;
-  ordersPending: number;
-  ordersDelivered: number;
-  ordersCancelled: number;
-  revenueToday: number;
-  revenueMonth: number;
-  revenueTotal: number;
-  pendingDeliveries: number;
-  lowStock: number;
-  pendingLeads: number;
-  openReclamos: number;
-  newClientsThisMonth: number;
-  averageOrderValue: number;
-};
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    if (typeof window !== "undefined") window.location.reload();
+    throw new Error("Sesión expirada");
+  }
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `Error enviando ${path}`);
+  }
+
+  return response.json();
+}
+
+export async function putJson<T>(path: string, body: unknown): Promise<T> {
+  const token = getToken();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  const response = await fetch(`${API}${path}`, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    if (typeof window !== "undefined") window.location.reload();
+    throw new Error("Sesión expirada");
+  }
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `Error actualizando ${path}`);
+  }
+
+  return response.json();
+}
+
+export async function deleteJson<T>(path: string): Promise<T> {
+  const token = getToken();
+  const headers: Record<string, string> = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  const response = await fetch(`${API}${path}`, {
+    method: "DELETE",
+    headers,
+  });
+
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    if (typeof window !== "undefined") window.location.reload();
+    throw new Error("Sesión expirada");
+  }
+
+  if (!response.ok) {
+    throw new Error(`Error eliminando ${path}`);
+  }
+
+  return response.json();
+}
