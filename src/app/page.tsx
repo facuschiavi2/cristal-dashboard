@@ -34,7 +34,7 @@ export default function HomePage() {
     e.preventDefault();
     setLoginError("");
     try {
-      const data = await postJson<{ token: string; user: User }>("/auth/login", {
+      const data = await postJson<{ token: string; user: User }>("/api/auth/login", {
         username,
         password,
       });
