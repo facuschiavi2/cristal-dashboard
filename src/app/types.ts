@@ -75,6 +75,7 @@ export type Lead = {
 };
 
 export type Complaint = {
+  order_number?: string;
   id: number;
   order_id?: number;
   client_id?: number;
