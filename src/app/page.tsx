@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DashboardShell, Panel } from "./components";
+import { DashboardShell } from "./components";
 import { fetchJson, postJson, money } from "./lib";
 import type { DashboardSummary, User } from "./types";
 import styles from "./page.module.css";
@@ -34,7 +34,7 @@ export default function HomePage() {
     e.preventDefault();
     setLoginError("");
     try {
-      const data = await postJson<{ token: string; user: User }>("/api/auth/login", {
+      const data = await postJson<{ token: string; user: User }>("/auth/login", {
         username,
         password,
       });
@@ -64,13 +64,27 @@ export default function HomePage() {
           <form onSubmit={handleLogin}>
             <div className={styles.loginField}>
               <label>Usuario</label>
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required autoComplete="username" />
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                autoComplete="username"
+              />
             </div>
             <div className={styles.loginField}>
               <label>Contraseña</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+              />
             </div>
-            <button className={styles.loginButton} type="submit">Iniciar sesión</button>
+            <button className={styles.loginButton} type="submit">
+              Iniciar sesión
+            </button>
           </form>
         </div>
       </div>
@@ -94,10 +108,12 @@ function ResumenPage({ onLogout }: { onLogout: () => void }) {
         setSummary(data);
         setUser(userData);
       })
-      .catch((err) => setError(err instanceof Error ? err.message : "Error cargando datos"));
+      .catch((err) =>
+        setError(err instanceof Error ? err.message : "Error cargando datos")
+      );
   }, []);
-
-  return (
+  return
+  (
     <DashboardShell
       styles={styles}
       title="Resumen"
@@ -119,11 +135,17 @@ function ResumenPage({ onLogout }: { onLogout: () => void }) {
               <h3>📦 Pedidos</h3>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Total</span>
-                <span className={styles.metricValue}>{summary.ordersPending + summary.ordersDelivered + summary.ordersCancelled}</span>
+                <span className={styles.metricValue}>
+                  {summary.ordersPending +
+                    summary.ordersDelivered +
+                    summary.ordersCancelled}
+                </span>
               </div>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Nuevos hoy</span>
-                <span className={`${styles.metricValue} ${styles.highlight}`}>{summary.ordersToday}</span>
+                <span className={`${styles.metricValue} ${styles.highlight}`}>
+                  {summary.ordersToday}
+                </span>
               </div>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Este mes</span>
@@ -154,19 +176,24 @@ function ResumenPage({ onLogout }: { onLogout: () => void }) {
               <h3>💰 Revenue</h3>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Hoy</span>
-                <span className={`${styles.metricValue} ${styles.currency}`}>{money(summary.revenueToday)}</span>
+                <span className={`${styles.metricValue} ${styles.currency}`}>
+                  {money(summary.revenueToday)}
+                </span>
               </div>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Este mes</span>
-                <span className={`${styles.metricValue} ${styles.currency}`}>{money(summary.revenueMonth)}</span>
+                <span className={`${styles.metricValue} ${styles.currency}`}>
+                  {money(summary.revenueMonth)}
+                </span>
               </div>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Total</span>
-                <span className={`${styles.metricValue} ${styles.currency}`}>{money(summary.revenueTotal)}</span>
+                <span className={`${styles.metricValue} ${styles.currency}`}>
+                  {money(summary.revenueTotal)}
+                </span>
               </div>
             </article>
-
-            <article className={styles.dashboardCard}>
+                        <article className={styles.dashboardCard}>
               <h3>⚙️ Operación</h3>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Entregas pendientes</span>
@@ -174,15 +201,22 @@ function ResumenPage({ onLogout }: { onLogout: () => void }) {
               </div>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Leads sin atender</span>
-                <span className={`${styles.metricValue} ${styles.highlight}`}>{summary.pendingLeads}</span>
+                <span className={`${styles.metricValue} ${styles.highlight}`}>
+                  {
+                    summary.pendingLeads}
+                </span>
               </div>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Reclamos abiertos</span>
-                <span className={`${styles.metricValue} ${styles.highlight}`}>{summary.openReclamos}</span>
+                <span className={`${styles.metricValue} ${styles.highlight}`}>
+                  {summary.openReclamos}
+                </span>
               </div>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Stock bajo</span>
-                <span className={`${styles.metricValue} ${styles.highlight}`}>{summary.lowStock}</span>
+                <span className={`${styles.metricValue} ${styles.highlight}`}>
+                  {summary.lowStock}
+                </span>
               </div>
             </article>
 
@@ -194,7 +228,9 @@ function ResumenPage({ onLogout }: { onLogout: () => void }) {
               </div>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Nuevos este mes</span>
-                <span className={`${styles.metricValue} ${styles.highlight}`}>{summary.newClientsThisMonth}</span>
+                <span className={`${styles.metricValue} ${styles.highlight}`}>
+                  {summary.newClientsThisMonth}
+                </span>
               </div>
             </article>
 
@@ -202,13 +238,17 @@ function ResumenPage({ onLogout }: { onLogout: () => void }) {
               <h3>🎟️ Ticket promedio</h3>
               <div className={styles.metric}>
                 <span className={styles.metricLabel}>Promedio</span>
-                <span className={`${styles.metricValue} ${styles.currency}`}>{money(summary.averageOrderValue)}</span>
+                <span className={`${styles.metricValue} ${styles.currency}`}>
+                  {money(summary.averageOrderValue)}
+                </span>
               </div>
             </article>
           </section>
 
           <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-            <button className={styles.logoutButton} onClick={onLogout}>Cerrar sesión</button>
+            <button className={styles.logoutButton} onClick={onLogout}>
+              Cerrar sesión
+            </button>
           </div>
         </>
       )}
