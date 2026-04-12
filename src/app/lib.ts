@@ -1,6 +1,6 @@
 import type { Client, Order, Product } from "./types";
 
-const API = "https://cristal-pg-production.up.railway.app";
+const API = "https://cristal-pg-production.up.railway.app/api";
 
 function getToken() {
   if (typeof window === "undefined") return null;
@@ -26,12 +26,15 @@ export async function fetchJson<T>(path: string): Promise<T> {
   if (!response.ok) {
     throw new Error(`Error cargando ${path}`);
   }
+
   return response.json();
 }
 
 export async function postJson<T>(path: string, body: unknown): Promise<T> {
   const token = getToken();
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
   const response = await fetch(`${API}${path}`, {
@@ -56,7 +59,9 @@ export async function postJson<T>(path: string, body: unknown): Promise<T> {
 
 export async function putJson<T>(path: string, body: unknown): Promise<T> {
   const token = getToken();
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
   const response = await fetch(`${API}${path}`, {
@@ -116,27 +121,4 @@ export function formatDate(value: string) {
     month: "short",
     year: "numeric",
   });
-}
-
-export function formatDateInput(value: string) {
-  if (!value) return "";
-  const d = new Date(value);
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${d.getFullYear()}-${month}-${day}`;
-}
-
-export function getOrderItems(order: Order) {
-  return order.items
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
-export function findClient(clients: Client[], order: Order) {
-  return clients.find((client) => client.id === order.client_id || client.name === order.client_name);
-}
-
-export function getCategories(products: Product[]) {
-  return Array.from(new Set(products.map((product) => product.category_name).filter(Boolean))).sort();
 }
