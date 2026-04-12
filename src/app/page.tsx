@@ -112,8 +112,7 @@ function ResumenPage({ onLogout }: { onLogout: () => void }) {
         setError(err instanceof Error ? err.message : "Error cargando datos")
       );
   }, []);
-  return
-  (
+  return  (
     <DashboardShell
       styles={styles}
       title="Resumen"
