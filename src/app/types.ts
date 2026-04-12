@@ -1,16 +1,17 @@
 export type Product = {
   id: number;
   name: string;
-  category_id: number;
+  sku?: string;
+  category_id?: number;
+  brand_id?: number;
   category_name: string;
-  brand_id: number;
   brand_name: string;
   price: number;
   unit: string;
-  stock: number;
+  stock?: number;
+  discontinued?: number;
   description?: string;
   technical_info?: string;
-  sku?: string;
 };
 
 export type Category = {
@@ -77,9 +78,10 @@ export type Complaint = {
   id: number;
   order_id?: number;
   client_id?: number;
-  clientName?: string;
+  client_name?: string;
   product_id?: number;
   product_name?: string;
+  title?: string;
   reason: string;
   description: string;
   status: "open" | "investigating" | "resolved";
