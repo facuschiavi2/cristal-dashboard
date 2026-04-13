@@ -333,7 +333,8 @@ export default function OrdersPage() {
                   </td>
                   <td><StatusBadge styles={styles} status={order.status} /></td>
                   <td>{formatDate(order.created_at)}</td>
-                  <td onClick={(e) => e.stopPropagation()} style={{ display: "flex", gap: 8 }}>
+                  <td onClick={(e) => e.stopPropagation()} style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <button className={styles.ghostButton} type="button" onClick={() => openDetail(order)}>Editar</button>
                     {order.status !== "cancelled" && order.payment_status !== "paid" && (
                       <button className={styles.primaryButton} type="button" onClick={() => markPaid(order.id)}>Marcar pagado</button>
                     )}
