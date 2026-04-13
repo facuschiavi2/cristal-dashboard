@@ -24,6 +24,7 @@ export default function OrderDetailModal({ orderId, onClose, onUpdated }: Props)
   const [products, setProducts] = useState<Product[]>([]);
 
   // Edit fields
+  const [orderStatus, setOrderStatus] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [itemDrafts, setItemDrafts] = useState<OrderItemDraft[]>([]);
   const [deliveryAddress, setDeliveryAddress] = useState("");
@@ -42,6 +43,7 @@ export default function OrderDetailModal({ orderId, onClose, onUpdated }: Props)
     ]).then(([d, productData]) => {
       setDetail(d);
       setProducts(productData);
+      setOrderStatus(d.status || "");
       setPaymentMethod(d.payment_method || d.payment || "");
       setNotes(d.notes || "");
       setDeliveryAddress(d.delivery?.address || d.delivery_address || "");
@@ -87,6 +89,7 @@ export default function OrderDetailModal({ orderId, onClose, onUpdated }: Props)
 
       const payload: Record<string, unknown> = {
         payment_method: paymentMethod,
+        status: orderStatus,
         notes,
         delivery: {
           address: deliveryAddress,
@@ -135,6 +138,16 @@ export default function OrderDetailModal({ orderId, onClose, onUpdated }: Props)
               {PAYMENT_METHODS.map((m) => (
                 <option key={m.value} value={m.value}>{m.label}</option>
               ))}
+            </select>
+          </label>
+
+          <label className={styles.field}>
+            Estado del pedido
+            <select value={orderStatus} onChange={(e) => setOrderStatus(e.target.value)}>
+              <option value="pending">Pendiente</option>
+              <option value="confirmed">Confirmado</option>
+              <option value="delivered">Entregado</option>
+              <option value="cancelled">Cancelado</option>
             </select>
           </label>
 
